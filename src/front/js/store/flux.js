@@ -4,21 +4,18 @@ const getState = ({ getStore, getActions, setStore }) => {
 	return {
 		store: {
 			message: null,
-			auth: false,
-			demo: [
-				{
-					title: "FIRST",
-					background: "white",
-					initial: "white"
-				},
-				{
-					title: "SECOND",
-					background: "white",
-					initial: "white"
-				}
-			]
+            auth: false,
+            user: null,
 		},
 		actions: {
+			setProfile: (profile) => {
+				setStore((prevStore) => ({ ...prevStore, user: profile }));
+			},
+			
+			setAuth: (authStatus) => {
+				setStore({ ...store, auth: authStatus });
+			},
+
 			login: async (email, password) => {
 				try {
 					const response = await fetch(`${BACKEND_URL}/api/login`, {
@@ -26,11 +23,12 @@ const getState = ({ getStore, getActions, setStore }) => {
 						headers: { "Content-Type": "application/json" },
 						body: JSON.stringify({ email, password }),
 					});
-
+			
 					const result = await response.json();
-
-					if (response.status === 200) {
-						localStorage.setItem("token", result.access_token);
+					console.log("Respuesta del backend:", result); // 👈 LOG para depurar
+			
+					if (response.status === 200 && result.access_token) {
+						localStorage.setItem("token", result.access_token); // Guarda el token
 						setStore({ auth: true });
 						alert("Inicio de sesión exitoso");
 						return true;
@@ -43,7 +41,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 					alert("Error al conectar con el servidor");
 					return false;
 				}
-			},
+			},			
 
 			signup: async (email, password) => {
 				try {
@@ -70,20 +68,29 @@ const getState = ({ getStore, getActions, setStore }) => {
 			},
 
 			getProfile: async () => {
+				const actions = getActions(); // Obtener las acciones dentro de la función
 				try {
-					const token = localStorage.getItem("token");
-					const response = await fetch(`${BACKEND_URL}/api/profile`, {
+					const response = await fetch(`${BACKEND_URL}/api/private`, {  // Usar BACKEND_URL aquí
 						method: "GET",
-						headers: { "Authorization": `Bearer ${token}` },
+						headers: {
+							"Content-Type": "application/json",
+							"Authorization": `Bearer ${localStorage.getItem("token")}`
+						}
 					});
-
-					const result = await response.json();
-					console.log("Perfil:", result);
+			
+					if (!response.ok) {
+						const errorDetail = await response.json();
+						throw new Error(errorDetail.message || "Error al obtener perfil");
+					}
+			
+					const profile = await response.json();
+					actions.setProfile(profile); // Guardas el perfil en el store
 				} catch (error) {
-					console.error("Error al obtener perfil:", error);
+					console.error("Error en getProfile:", error);
+					alert("Error al obtener perfil: " + error.message);
 				}
-			},
-
+			},		
+			
 			tokenVerify: async () => {
 				try {
 					const token = localStorage.getItem("token");
@@ -127,14 +134,6 @@ const getState = ({ getStore, getActions, setStore }) => {
 				}
 			},			
 
-			changeColor: (index, color) => {
-				const store = getStore();
-				const demo = store.demo.map((elm, i) => {
-					if (i === index) elm.background = color;
-					return elm;
-				});
-				setStore({ demo });
-			}
 		}
 	};
 };

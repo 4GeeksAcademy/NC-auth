@@ -38,7 +38,7 @@ db.init_app(app)
 
 # Configuración de JWT
 app.config["JWT_SECRET_KEY"] = os.getenv("FLASK_APP_KEY", "super-secret")
-app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(hours=1)
+app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(hours=4)
 jwt = JWTManager(app)
 
 
@@ -91,33 +91,33 @@ def signup():
 
 @app.route('/api/login', methods=['POST'])
 def login():
-    body = request.get_json()
-
-    email = body.get("email")
-    password = body.get("password")
-
-    if not email or not password:
-        return jsonify({"error": "Correo y contraseña son obligatorios"}), 400
+    data = request.get_json()
+    email = data.get("email")
+    password = data.get("password")
 
     user = User.query.filter_by(email=email).first()
-
     if not user or not check_password_hash(user.password, password):
         return jsonify({"error": "Credenciales inválidas"}), 401
 
     access_token = create_access_token(identity=user.id)
-    return jsonify({"token": access_token, "user": user.serialize()}), 200
+    return jsonify({"access_token": access_token, "msg": "Inicio de sesión exitoso"}), 200
 
 # Ruta protegida
+
 @app.route('/api/private', methods=['GET'])
 @jwt_required()
 def private():
     user_id = get_jwt_identity()
+    print(f"User ID: {user_id}")
     user = User.query.get(user_id)
 
     if not user:
-        return jsonify({"error": "Usuario no encontrado"}), 404
+        return jsonify({"msg": "Usuario no encontrado"}), 404
 
-    return jsonify({"msg": "Acceso autorizado", "user": user.serialize()}), 200
+    return jsonify({
+        "id": user.id,
+        "email": user.email
+    }), 200
 
 # Servir archivos estáticos
 @app.route('/<path:path>', methods=['GET'])
