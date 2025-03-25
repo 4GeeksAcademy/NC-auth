@@ -23,3 +23,6 @@ def handle_hello():
 
     return jsonify(response_body), 200
 
+@api.route('/hello', methods=['GET'])
+def get_hello():
+    return jsonify({"message": "¡Hola desde el backend!"}), 200
