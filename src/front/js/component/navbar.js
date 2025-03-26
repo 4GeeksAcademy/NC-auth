@@ -24,7 +24,7 @@ export const Navbar = () => {
                         </button>
                     ) : null}
                     <Link to="/signup">
-                        <button className="btn btn-success">Registrarse</button>
+                        <button className="btn btn-success">Create new user</button>
                     </Link>
                 </div>
             </div>

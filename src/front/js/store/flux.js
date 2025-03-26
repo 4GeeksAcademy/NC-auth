@@ -28,7 +28,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 					console.log("Respuesta del backend:", result); // 👈 LOG para depurar
 			
 					if (response.status === 200 && result.access_token) {
-						localStorage.setItem("token", result.access_token); // Guarda el token
+						localStorage.setItem("access_token", result.access_token); // Guarda el token
 						setStore({ auth: true });
 						alert("Inicio de sesión exitoso");
 						return true;
@@ -74,7 +74,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 						method: "GET",
 						headers: {
 							"Content-Type": "application/json",
-							"Authorization": `Bearer ${localStorage.getItem("token")}`
+							"Authorization": `Bearer ${localStorage.getItem("access_token")}`
 						}
 					});
 			
@@ -93,7 +93,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 			
 			tokenVerify: async () => {
 				try {
-					const token = localStorage.getItem("token");
+					const token = localStorage.getItem("access_token");
 					const response = await fetch(`${BACKEND_URL}/api/verify-token`, {
 						method: "GET",
 						headers: { "Authorization": `Bearer ${token}` },
@@ -113,7 +113,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 			},
 
 			logout: () => {
-				localStorage.removeItem("token");
+				localStorage.removeItem("access_token");
 				setStore({ auth: false });
 				alert("Sesión cerrada");
 			},

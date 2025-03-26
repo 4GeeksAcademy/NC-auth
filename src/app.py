@@ -14,6 +14,7 @@ from flask_jwt_extended import JWTManager, create_access_token, jwt_required, ge
 from flask_cors import CORS
 from datetime import timedelta
 from werkzeug.security import generate_password_hash, check_password_hash
+import json
 
 # Configuración de entorno
 ENV = "development" if os.getenv("FLASK_DEBUG") == "1" else "production"
@@ -99,7 +100,7 @@ def login():
     if not user or not check_password_hash(user.password, password):
         return jsonify({"error": "Credenciales inválidas"}), 401
 
-    access_token = create_access_token(identity=user.id)
+    access_token = create_access_token(identity=str(user.id))
     return jsonify({"access_token": access_token, "msg": "Inicio de sesión exitoso"}), 200
 
 # Ruta protegida
@@ -107,16 +108,17 @@ def login():
 @app.route('/api/private', methods=['GET'])
 @jwt_required()
 def private():
-    user_id = get_jwt_identity()
+    user_id = json.loads(get_jwt_identity())
     print(f"User ID: {user_id}")
     user = User.query.get(user_id)
 
     if not user:
         return jsonify({"msg": "Usuario no encontrado"}), 404
-
+    format_email=str(user.email)
+    format_id=str(user.id)
     return jsonify({
-        "id": user.id,
-        "email": user.email
+        "id": format_id,
+        "email": format_email
     }), 200
 
 # Servir archivos estáticos
