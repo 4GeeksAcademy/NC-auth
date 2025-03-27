@@ -104,7 +104,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 						console.log("Token válido");
 					} else {
 						setStore({ auth: false });
-						localStorage.removeItem("token");
+						localStorage.removeItem("access_token");
 					}
 				} catch (error) {
 					console.error("Error al verificar token:", error);

@@ -1,13 +1,15 @@
 import React, { useContext } from "react";
 import { Context } from "../store/appContext";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export const Navbar = () => {
     const { store, actions } = useContext(Context); // Obtener store y actions
+    const navigate = useNavigate();
 
     // Función que maneja el logout
     const handleLogout = () => {
         actions.logout(); // Llamar a la acción de logout
+        navigate("/");
     };
 
     return (
