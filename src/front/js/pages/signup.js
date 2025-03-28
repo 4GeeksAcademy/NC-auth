@@ -44,10 +44,10 @@ export const Signup = () => {
 
     return (
         <div className="container mt-5">
-            <h2>Registro de Usuario</h2>
+            <h2>User Registration</h2>
             <form onSubmit={handleSubmit}>
                 <div className="mb-3">
-                    <label htmlFor="email" className="form-label">Correo electrónico:</label>
+                    <label htmlFor="email" className="form-label">Email:</label>
                     <input
                         type="email"
                         id="email"
@@ -59,7 +59,7 @@ export const Signup = () => {
                     />
                 </div>
                 <div className="mb-3">
-                    <label htmlFor="password" className="form-label">password:</label>
+                    <label htmlFor="password" className="form-label">Password:</label>
                     <input
                         type="password"
                         id="password"
@@ -70,7 +70,7 @@ export const Signup = () => {
                         required
                     />
                 </div>
-                <button type="submit" className="btn btn-success">Registrarse</button>
+                <button type="submit" className="btn btn-success">Register</button>
             </form>
         </div>
     );

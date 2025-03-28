@@ -105,20 +105,34 @@ def login():
 
 # Ruta protegida
 
+# @app.route('/api/private', methods=['GET'])
+# @jwt_required()
+# def private():
+#     user_id = json.loads(get_jwt_identity())
+#     print(f"User ID: {user_id}")
+#     user = User.query.get(user_id)
+
+#     if not user:
+#         return jsonify({"msg": "Usuario no encontrado"}), 404
+#     format_email=str(user.email)
+#     format_id=str(user.id)
+#     return jsonify({
+#         "id": format_id,
+#         "email": format_email
+#     }), 200
 @app.route('/api/private', methods=['GET'])
 @jwt_required()
 def private():
-    user_id = json.loads(get_jwt_identity())
+    user_id = get_jwt_identity()
     print(f"User ID: {user_id}")
     user = User.query.get(user_id)
 
     if not user:
         return jsonify({"msg": "Usuario no encontrado"}), 404
-    format_email=str(user.email)
-    format_id=str(user.id)
+
     return jsonify({
-        "id": format_id,
-        "email": format_email
+        "id": user.id,
+        "email": user.email
     }), 200
 
 # Servir archivos estáticos
