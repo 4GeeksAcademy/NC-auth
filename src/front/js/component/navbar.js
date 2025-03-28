@@ -3,12 +3,12 @@ import { Context } from "../store/appContext";
 import { Link, useNavigate } from "react-router-dom";
 
 export const Navbar = () => {
-    const { store, actions } = useContext(Context); // Obtener store y actions
+    const { store, actions } = useContext(Context); 
     const navigate = useNavigate();
 
     // Función que maneja el logout
     const handleLogout = () => {
-        actions.logout(); // Llamar a la acción de logout
+        actions.logout(); 
         navigate("/");
     };
 

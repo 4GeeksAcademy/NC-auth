@@ -3,7 +3,7 @@ import { Context } from "../store/appContext";
 import { useNavigate } from "react-router-dom";
 
 export const Signup = () => {
-    const { store } = useContext(Context); // Accede a BACKEND_URL desde el contexto
+    const { store } = useContext(Context); 
     const [form, setForm] = useState({
         email: "",
         password: ""
@@ -31,7 +31,7 @@ export const Signup = () => {
     
             if (response.ok) {
                 alert("✅ El usuario ha sido registrado correctamente.");
-                setForm({ email: "", password: "" }); // Limpiar el formulario
+                setForm({ email: "", password: "" }); 
                 navigate("/");
             } else {
                 alert("❌ Hubo un error al registrar el usuario.");

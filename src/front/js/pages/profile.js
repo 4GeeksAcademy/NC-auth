@@ -15,7 +15,7 @@ export const Profile = () => {
         if (store.user !== null) {
             setLoading(false);
         }
-    }, [store.user]); // ✅ Solo observa el cambio en user
+    }, [store.user]); 
 
     return (
         <div className="text-center mt-5">
